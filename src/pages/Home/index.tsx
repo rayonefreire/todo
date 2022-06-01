@@ -24,6 +24,10 @@ export function Home(){
     {id: '', name: '', done: false}
   ]);
 
+  const [listConcluded, setListConcluded] = useState([
+    '',
+  ]);
+
   function addTask() {
     const item = {
       id: list.length.toString(),
@@ -56,9 +60,8 @@ export function Home(){
           onPress={() => {
             const isMe = (element) => element.name === item.name;
             const pos = list.findIndex(isMe);
-            console.log(pos);
             list.splice(pos, 1);
-            console.log(list);
+            listConcluded.push(name);
             AsyncStorage.setItem('@LIST', JSON.stringify(list));
             getList();
           }}
