@@ -21,12 +21,14 @@ type Props = {
 export function Home(){
   const [text, setText] = useState(String);
   const [list, setList] = useState([
-    {id: '', name: '', done: false}
+    {id: '', name: '',}
   ]);
 
   const [listConcluded, setListConcluded] = useState([
-    '',
+    {id: '', name: ''},
   ]);
+  
+  const [showList, setShowList] = useState(false);
 
   function addTask() {
     const item = {
@@ -66,7 +68,7 @@ export function Home(){
             const isMe = (element) => element.name === item.name;
             const pos = list.findIndex(isMe);
             list.splice(pos, 1);
-            listConcluded.push(name);
+            listConcluded.push(item);
             console.log(listConcluded);
             AsyncStorage.setItem("@LISTCONCLUDED", JSON.stringify(listConcluded));
             AsyncStorage.setItem('@LIST', JSON.stringify(list));
@@ -87,12 +89,30 @@ export function Home(){
       </View>
 
       <View style={styles.main}>
-        <FlatList
-          data={list}
-          extraData={list}
-          renderItem={({ item }) => <Item name={item.name} item={item} />}
-          keyExtractor={( item ) => item.id}
-        />
+        {
+          !showList ?
+          <>
+            <FlatList
+              data={list}
+              extraData={list}
+              renderItem={({ item }) => <Item name={item.name} item={item} />}
+              keyExtractor={( item ) => item.id}
+            />
+
+            <FlatList
+              data={listConcluded}
+              extraData={listConcluded}
+              renderItem={({ item }) => <Item name={item.name} item={item} />}
+              keyExtractor={( item ) => item.id}
+            />
+          </> :
+          <FlatList
+            data={list}
+            extraData={list}
+            renderItem={({ item }) => <Item name={item.name} item={item} />}
+            keyExtractor={( item ) => item.id}
+          />
+         }    
 
         <View style={styles.form}>
           <Ionicons name="ios-add-circle-sharp" size={32} color="gray" />
