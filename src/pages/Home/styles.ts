@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: 34,
     fontWeight: 'bold',
-    color: 'gray'
+    color: '#F2C91D'
   },
   main: {
     marginHorizontal: 24,
@@ -41,6 +41,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 20,
+    marginLeft: -3
   },
   input: {
     height: 32,

@@ -44,6 +44,11 @@ export function Home(){
     if (lista !== null) {
       setList(JSON.parse(lista));
     }
+
+    const listaConluida = await AsyncStorage.getItem("@LISTCONCLUDED");
+    if (listaConluida !== null) {
+      setListConcluded(JSON.parse(listaConluida));
+    }
   }
 
   //AsyncStorage.clear();
@@ -62,6 +67,8 @@ export function Home(){
             const pos = list.findIndex(isMe);
             list.splice(pos, 1);
             listConcluded.push(name);
+            console.log(listConcluded);
+            AsyncStorage.setItem("@LISTCONCLUDED", JSON.stringify(listConcluded));
             AsyncStorage.setItem('@LIST', JSON.stringify(list));
             getList();
           }}
