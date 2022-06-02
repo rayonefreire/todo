@@ -8,7 +8,9 @@ export const styles = StyleSheet.create({
   header: {
     marginTop: 70,
     marginHorizontal: 24,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   title: {
     fontSize: 34,
@@ -54,6 +56,6 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     width: 290,
-    marginLeft: 38
+    marginLeft: 37
   }
 });

@@ -86,33 +86,22 @@ export function Home(){
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Tarefas</Text>
+
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => setShowList(!showList)}
+        >
+          <Text style={{color: 'white'}}>Mostrar conclúidos</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.main}>
-        {
-          !showList ?
-          <>
-            <FlatList
-              data={list}
-              extraData={list}
-              renderItem={({ item }) => <Item name={item.name} item={item} />}
-              keyExtractor={( item ) => item.id}
-            />
-
-            <FlatList
-              data={listConcluded}
-              extraData={listConcluded}
-              renderItem={({ item }) => <Item name={item.name} item={item} />}
-              keyExtractor={( item ) => item.id}
-            />
-          </> :
-          <FlatList
-            data={list}
-            extraData={list}
-            renderItem={({ item }) => <Item name={item.name} item={item} />}
-            keyExtractor={( item ) => item.id}
-          />
-         }    
+        <FlatList
+          data={list}
+          extraData={list}
+          renderItem={({ item }) => <Item name={item.name} item={item} />}
+          keyExtractor={( item ) => item.id}
+        />  
 
         <View style={styles.form}>
           <Ionicons name="ios-add-circle-sharp" size={32} color="gray" />
@@ -124,25 +113,12 @@ export function Home(){
             keyboardAppearance='dark'
           />
 
-          {
-            !text ? 
-            <View>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={addTask}
-              >
-                <AntDesign name="checkcircle" size={24} color="#0270FF" />
-              </TouchableOpacity>
-            </View> :
-            <View>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={addTask}
-              >
-                <AntDesign name="checkcircle" size={24} color="#0270FF" />
-              </TouchableOpacity>
-            </View>
-          }
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={addTask}
+          >
+            <AntDesign name="checkcircle" size={24} color="#0270FF" />
+          </TouchableOpacity>
         </View>
 
         <View style={styles.divider} />
