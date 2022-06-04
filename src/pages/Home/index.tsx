@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 
 import { styles } from './styles';
+import { ModalView } from '../../components/Modal';
 
 type Props = {
   name: string;
@@ -20,15 +21,13 @@ type Props = {
 
 export function Home(){
   const [text, setText] = useState(String);
+  const [modalVisible, setModalVisible] = useState(false);
   const [list, setList] = useState([
     {id: '', name: '',}
   ]);
-
   const [listConcluded, setListConcluded] = useState([
     {id: '', name: ''},
   ]);
-  
-  const [showList, setShowList] = useState(false);
 
   function addTask() {
     const item = {
@@ -46,14 +45,11 @@ export function Home(){
     if (lista !== null) {
       setList(JSON.parse(lista));
     }
-
     const listaConluida = await AsyncStorage.getItem("@LISTCONCLUDED");
     if (listaConluida !== null) {
       setListConcluded(JSON.parse(listaConluida));
     }
   }
-
-  //AsyncStorage.clear();
 
   useEffect(() => {
     getList();
@@ -89,9 +85,9 @@ export function Home(){
 
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => setShowList(!showList)}
+          onPress={() => setModalVisible(!modalVisible)}
         >
-          <Text style={{color: 'white'}}>Mostrar conclúidos</Text>
+          <Ionicons name="ios-menu" size={32} color="white" />
         </TouchableOpacity>
       </View>
 
@@ -120,9 +116,27 @@ export function Home(){
             <AntDesign name="checkcircle" size={24} color="#0270FF" />
           </TouchableOpacity>
         </View>
-
         <View style={styles.divider} />
       </View>
+
+      <ModalView
+        modalVisible={modalVisible}
+      >
+        <View>
+          <View>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Ionicons name="ios-close" size={30} color="black" />
+            </TouchableOpacity>
+          </View>
+
+
+
+
+        </View>
+      </ModalView>
     </View>
   );
 }
