@@ -21,23 +21,6 @@ export const styles = StyleSheet.create({
     marginHorizontal: 24,
     marginTop: 30,
   },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 5,
-  },
-  check: {
-    width: 24,
-    height: 24,
-    borderWidth: 1,
-    borderRadius: 12,
-    borderColor: 'white',
-    marginRight: 10,
-  },
-  titleItem: {
-    fontSize: 20,
-    color: 'white',
-  },
   form: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -57,5 +40,20 @@ export const styles = StyleSheet.create({
     borderColor: 'gray',
     width: 290,
     marginLeft: 37
+  },
+  headerModal: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginVertical: 18,
+    marginHorizontal: 24
+  },
+  titleModal: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  mainModal: {
+    marginHorizontal: 24
   }
 });

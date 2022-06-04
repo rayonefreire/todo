@@ -9,15 +9,12 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 
 import { styles } from './styles';
 import { ModalView } from '../../components/Modal';
-
-type Props = {
-  name: string;
-  item: any;
-}
+import { Item } from '../../components/Item';
 
 export function Home(){
   const [text, setText] = useState(String);
@@ -35,9 +32,13 @@ export function Home(){
       name: text,
       done: false
     }
-    list.push(item);
-    AsyncStorage.setItem("@LIST", JSON.stringify(list));
-    setText("");
+    if (text === '') {
+      Alert.alert("Ops!", "Por favor dígite sua tarefa.")
+    } else if (text !== '') {
+      list.push(item);
+      AsyncStorage.setItem("@LIST", JSON.stringify(list));
+      setText("");
+    }
   }
 
   async function getList() {
@@ -55,34 +56,10 @@ export function Home(){
     getList();
   }, []);
 
-  function Item({ name, item } : Props) {
-    return (
-      <View style={styles.item}>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => {
-            const isMe = (element) => element.name === item.name;
-            const pos = list.findIndex(isMe);
-            list.splice(pos, 1);
-            listConcluded.push(item);
-            console.log(listConcluded);
-            AsyncStorage.setItem("@LISTCONCLUDED", JSON.stringify(listConcluded));
-            AsyncStorage.setItem('@LIST', JSON.stringify(list));
-            getList();
-          }}
-        >
-          <View style={styles.check} />
-        </TouchableOpacity>
-        <Text style={styles.titleItem}>{ name }</Text>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Tarefas</Text>
-
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => setModalVisible(!modalVisible)}
@@ -95,20 +72,17 @@ export function Home(){
         <FlatList
           data={list}
           extraData={list}
-          renderItem={({ item }) => <Item name={item.name} item={item} />}
+          renderItem={({ item }) => <Item getList={getList} item={item} list={list} listConcluded={listConcluded} name={item.name} />}
           keyExtractor={( item ) => item.id}
         />  
-
         <View style={styles.form}>
           <Ionicons name="ios-add-circle-sharp" size={32} color="gray" />
-
           <TextInput
             placeholderTextColor='white'
             onChangeText={setText}
             style={styles.input}
             keyboardAppearance='dark'
           />
-
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={addTask}
@@ -123,7 +97,8 @@ export function Home(){
         modalVisible={modalVisible}
       >
         <View>
-          <View>
+          <View style={styles.headerModal}>
+            <Text style={styles.titleModal}>Opções</Text>
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={() => setModalVisible(!modalVisible)}
@@ -131,10 +106,16 @@ export function Home(){
               <Ionicons name="ios-close" size={30} color="black" />
             </TouchableOpacity>
           </View>
-
-
-
-
+          <View style={styles.mainModal}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => {
+                
+              }}
+            >
+              <Text>Mostrar conclúidos</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ModalView>
     </View>
