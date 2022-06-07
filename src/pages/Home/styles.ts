@@ -51,9 +51,10 @@ export const styles = StyleSheet.create({
   titleModal: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: 'black',
+    color: '#F2C91D',
   },
   mainModal: {
+    marginTop: 10,
     marginHorizontal: 24
   }
 });

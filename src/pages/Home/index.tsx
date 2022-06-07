@@ -15,6 +15,8 @@ import {
 import { styles } from './styles';
 import { ModalView } from '../../components/Modal';
 import { Item } from '../../components/Item';
+import { ItemModal } from '../../components/ItemModal';
+import SETTINGS from '../../services/ItensSettings/settings.api';
 
 export function Home(){
   const [text, setText] = useState(String);
@@ -93,6 +95,10 @@ export function Home(){
         <View style={styles.divider} />
       </View>
 
+
+
+
+
       <ModalView
         modalVisible={modalVisible}
       >
@@ -103,18 +109,15 @@ export function Home(){
               activeOpacity={0.7}
               onPress={() => setModalVisible(!modalVisible)}
             >
-              <Ionicons name="ios-close" size={30} color="black" />
+              <Ionicons name="ios-close" size={30} color="#0270FF" />
             </TouchableOpacity>
           </View>
           <View style={styles.mainModal}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => {
-                
-              }}
-            >
-              <Text>Mostrar conclúidos</Text>
-            </TouchableOpacity>
+            <FlatList
+              data={SETTINGS}
+              renderItem={({ item }) => <ItemModal title={item.title} modalVisible={modalVisible} setModalVisible={setModalVisible} />}
+              keyExtractor={( item ) => item.id}
+            />
           </View>
         </View>
       </ModalView>
