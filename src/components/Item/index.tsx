@@ -23,14 +23,14 @@ export function Item({ name, item, list, listConcluded, getList } : Props){
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={() => {
-        const isMe = (element) => element.name === item.name;
-        const pos = list.findIndex(isMe);
-        list.splice(pos, 1);
-        listConcluded.push(item);
-        console.log(listConcluded);
-        AsyncStorage.setItem("@LISTCONCLUDED", JSON.stringify(listConcluded));
-        AsyncStorage.setItem('@LIST', JSON.stringify(list));
-        getList();
+          const isMe = (element) => element.name === item.name;
+          const pos = list.findIndex(isMe);
+          list.splice(pos, 1);
+          listConcluded.push(item);
+          console.log(listConcluded);
+          AsyncStorage.setItem("@LISTCONCLUDED", JSON.stringify(listConcluded));
+          AsyncStorage.setItem('@LIST', JSON.stringify(list));
+          getList();
         }}
       >
         <View style={styles.check} />

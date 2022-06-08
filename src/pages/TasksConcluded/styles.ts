@@ -16,4 +16,27 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#F2C91D',
   },
+  main: {
+    flex: 1,
+    marginTop: 30,
+    marginHorizontal: 24,
+    marginBottom: 55,
+  },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 5,
+  },
+  titleItem: {
+    fontSize: 20,
+    color: 'white',
+    marginLeft: 10,
+  },
+  divider: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    width: 290,
+    marginLeft: 37,
+    marginBottom: 8,
+  },
 });

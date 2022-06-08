@@ -18,8 +18,8 @@ export const styles = StyleSheet.create({
     color: '#F2C91D'
   },
   main: {
-    marginHorizontal: 24,
     marginTop: 30,
+    marginHorizontal: 24,
   },
   form: {
     flexDirection: 'row',
