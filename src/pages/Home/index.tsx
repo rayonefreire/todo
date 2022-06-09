@@ -22,10 +22,10 @@ export function Home(){
   const [text, setText] = useState(String);
   const [modalVisible, setModalVisible] = useState(false);
   const [list, setList] = useState([
-    {id: '', name: '',}
+    
   ]);
   const [listConcluded, setListConcluded] = useState([
-    {id: '', name: ''},
+    
   ]);
 
   function addTask() {
@@ -74,8 +74,7 @@ export function Home(){
         <FlatList
           data={list}
           extraData={list}
-          renderItem={({ item }) => <Item getList={getList} item={item} list={list} listConcluded={listConcluded} name={item.name} />}
-          keyExtractor={( item ) => item.id}
+          renderItem={({ item }) => <Item getList={getList} item={item} list={list} listConcluded={listConcluded} name={item} />}
         />  
         <View style={styles.form}>
           <Ionicons name="ios-add-circle-sharp" size={32} color="gray" />
