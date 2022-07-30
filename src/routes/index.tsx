@@ -1,15 +1,11 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React from "react";
-import { Home } from "../pages/Home";
-import { TasksConcluded } from "../pages/TasksConcluded";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useContext, useEffect, useState } from "react";
+import { Context } from "../context/auth";
+import { AppRoutes } from "./app.routes";
+import { SignInRoutes } from "./signed.routes";
 
-export default function Routes() {
-  const Stack = createNativeStackNavigator();
+export function Routes() {
+  const { signed } = useContext(Context);
 
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="TaksConcluded" component={TasksConcluded} />
-    </Stack.Navigator>
-  );
+  return signed ? <AppRoutes /> : <SignInRoutes />;
 }
