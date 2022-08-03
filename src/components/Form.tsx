@@ -4,14 +4,14 @@ import { Plus, Alarm, CalendarBlank } from 'phosphor-react-native';
 import { HStack, Input, IInputProps, IconButton, useColorMode, useTheme } from 'native-base';
 import * as Notifications from 'expo-notifications';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = IInputProps & {
   setText: React.Dispatch<React.SetStateAction<string>>;
   addItem: any;
-  text: string;
 }
 
-export function Form({ setText, addItem, text, ...rest } : Props) {
+export function Form({ setText, addItem, ...rest } : Props) {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
@@ -36,9 +36,7 @@ export function Form({ setText, addItem, text, ...rest } : Props) {
       const diffTime = Math.abs(currentDate - Number(date));
       const segundos = diffTime / 1000;
 
-      console.log(segundos);
-      
-      schedulePushNotification(segundos, text);
+      AsyncStorage.setItem('@SECONDS', String(segundos));
     }
   }
 
@@ -119,17 +117,6 @@ export function Form({ setText, addItem, text, ...rest } : Props) {
       )}
     </>
   );
-}
-
-async function schedulePushNotification(segundos, text) {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "Lembrete 👍",
-      body: `Hora de concluir a tarefa: ${text}`,
-    },
-    trigger: { seconds: segundos },
-  });
-  console.log('Notificação enviada');
 }
 
 async function registerForPushNotificationsAsync() {

@@ -9,6 +9,8 @@ type Props = {
   }[];
   getUser(): Promise<void>;
   getListConcluded(): Promise<void>;
+  getSeconds(): Promise<void>;
+  segundos: number;
 }
 
 type Children = {
@@ -20,12 +22,21 @@ export const Context = createContext({} as Props);
 export function Provider({ children } : Children) {
   const [user, setUser] = useState<null | string>(String);
   const [listConcluded, setListConcluded] = useState([]);
+  const [segundos, setSegundos] = useState(Number);
 
   async function getListConcluded() {
     const lista = await AsyncStorage.getItem("@LISTCONCLUDED");
 
     if (lista !== null) {
       setListConcluded(JSON.parse(lista));
+    }
+  }
+
+  async function getSeconds() {
+    const date = await AsyncStorage.getItem("@SECONDS");
+
+    if (date !== null) {
+      setSegundos(Number(date));
     }
   }
 
@@ -42,7 +53,7 @@ export function Provider({ children } : Children) {
   }, []);
 
   return (
-    <Context.Provider value={{ signed: !!user, getUser, listConcluded, getListConcluded }}>
+    <Context.Provider value={{ signed: !!user, getUser, listConcluded, getListConcluded, getSeconds, segundos }}>
       { children }
     </Context.Provider>
   )

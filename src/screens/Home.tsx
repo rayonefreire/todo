@@ -4,6 +4,7 @@ import { KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import { Check, List, PlusCircle, CheckCircle, Sun, Moon } from 'phosphor-react-native';
 import { VStack, HStack, Heading, Center, Text, FlatList, useTheme, IconButton, useColorMode } from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Notifications from 'expo-notifications';
 
 import { Form } from '../components/Form';
 import { Item } from '../components/Item';
@@ -20,7 +21,7 @@ export function Home() {
     {id: '1', name: ''}
   ]);
 
-  const { listConcluded } = useContext(Context);
+  const { listConcluded, getSeconds, segundos } = useContext(Context);
   const { colors } = useTheme();
   const navigation = useNavigation();
 
@@ -54,6 +55,11 @@ export function Home() {
     list.push(item);
     AsyncStorage.setItem("@LIST", JSON.stringify(list));
     setText("");
+
+    getSeconds();
+  
+    console.log(segundos);
+    schedulePushNotification(segundos, text);
   }
 
   function handleLightMode() {
@@ -147,7 +153,6 @@ export function Home() {
             setText={setText}
             addItem={handleAddItem}
             onBlur={handleForm}
-            text={text}
           /> 
           : 
           <TouchableOpacity
@@ -231,4 +236,15 @@ export function Home() {
       </ModalView>
     </KeyboardAvoidingView>
   );
+}
+
+async function schedulePushNotification(segundos, text) {
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: "Lembrete 👍",
+      body: `Hora de concluir a tarefa: ${text}`,
+    },
+    trigger: { seconds: segundos },
+  });
+  console.log('Notificação enviada');
 }
