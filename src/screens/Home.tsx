@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import { Check, List, PlusCircle, CheckCircle, Sun, Moon } from 'phosphor-react-native';
-import { KeyboardAvoidingView, Platform, TouchableOpacity, Appearance } from 'react-native';
 import { VStack, HStack, Heading, Center, Text, FlatList, useTheme, IconButton, useColorMode } from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -147,6 +147,7 @@ export function Home() {
             setText={setText}
             addItem={handleAddItem}
             onBlur={handleForm}
+            text={text}
           /> 
           : 
           <TouchableOpacity
