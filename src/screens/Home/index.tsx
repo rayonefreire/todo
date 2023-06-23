@@ -8,7 +8,6 @@ import {
   SafeAreaView,
   ScrollView,
   Alert,
-  useColorScheme,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@react-navigation/native';
@@ -17,7 +16,6 @@ import { styles } from './styles';
 import { theme } from '../../styles/theme';
 
 import { ItemHome } from '../../components/ItemHome';
-import { Header } from '../../components/Header';
 import { Context } from '../../context';
 import { ButtonIcon } from '../../components/ButtonIcon';
 import { ModalView } from '../../components/ModalView';
@@ -145,11 +143,6 @@ export function Home(){
               route={item.route}
             />
           }
-          ListHeaderComponent={() => 
-            <Header
-              title='Home'
-            />
-          }
         />
       </View>
 
@@ -161,11 +154,6 @@ export function Home(){
         <ScrollView
           style={styles.modal}
         >
-          <View style={{ marginTop: -30 }}>
-            <Header
-              title='Configurações'
-            />
-          </View>
           {SETTINGS.map(item =>
             <View key={item.id} style={styles.item}>
               <ButtonText

@@ -15,7 +15,6 @@ export function TasksScheduled(){
       <View style={styles.container}>
         <TasksList
           type='Agendados'
-          buttonNavigate
         />
       </View>
     </SafeAreaView>

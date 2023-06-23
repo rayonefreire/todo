@@ -33,8 +33,6 @@ export function Tasks(){
         <View style={styles.container}>
           <TasksList
             type='Tarefas'
-            action
-            buttonNavigate
           />
 
           {showForm ?

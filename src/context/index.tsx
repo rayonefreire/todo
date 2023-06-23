@@ -9,7 +9,6 @@ export type User = {
   image_user: string;
 }
 
-
 type Props = {
   tasks: PropsTasks;
   setTasks: React.Dispatch<React.SetStateAction<PropsTasks>>;
@@ -56,7 +55,6 @@ export function Provider({ children } : PropsProvider) {
 
   // Estados para alterar o tema do aplicativo
   const [theme, setTheme] = useState(useColorScheme());
-
 
   /////// Arrumar a funcionalidade da opção (Sistema)
   async function getTheme() {

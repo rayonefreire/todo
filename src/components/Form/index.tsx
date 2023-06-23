@@ -69,7 +69,7 @@ export function Form({ handleShowForm } : Props){
       console.log(e);
     }
     
-    if (timeNotification) {
+    if (timeNotification > date) {
       const diffTime = Math.abs(Number(timeNotification) - Number(date));
       const timeRes = diffTime / 1000;
       task.id_notification = await schedulePushNotification(task.name, timeRes);

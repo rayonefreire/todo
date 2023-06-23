@@ -14,7 +14,6 @@ export function TasksImportant(){
       <View style={styles.container}>
         <TasksList
           type='Importantes'
-          buttonNavigate
         />
       </View>
     </SafeAreaView>
