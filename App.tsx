@@ -1,8 +1,8 @@
-import { useContext } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Context, Provider } from './src/context';
+import { Provider } from './src/context';
 import * as Notifications from 'expo-notifications';
 import { Routes } from './src/routes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -12,13 +12,13 @@ Notifications.setNotificationHandler({
   }),
 });
 
+//AsyncStorage.clear()
+
 export default function App() {
-  const { theme } = useContext(Context);
-  
   return (
     <Provider>
       <Routes />
-      <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
+      <StatusBar style='auto' />
     </Provider>
   );
 }

@@ -1,8 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 
 import {
   View,
-  Text,
   TextInput,
   TouchableOpacity,
   Image,
@@ -12,22 +11,23 @@ import {
   Keyboard
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@react-navigation/native';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 
 import { styles } from './styles';
-import { theme } from '../../styles/theme';
+import { auth, database } from '../../../config/firebase';
 
 import { Button } from '../../components/Button';
-import { Context } from '../../context';
 import { HeaderContent } from '../../components/HeaderContent';
 
 export function SignIn(){
   const [image, setImage] = useState(null);
   const [name, setName] = useState(String);
+  const [email, setEmail] = useState(String);
+  const [password, setPassword] = useState(String);
 
   const scheme = useTheme();
-  const { setUser } = useContext(Context);
 
   async function pickImage() {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -45,18 +45,14 @@ export function SignIn(){
   };
 
   async function handleSignIn() {
-    const userdata = {
-      name: name,
-      image_user: image
-    }
-    setUser(userdata);
-    try {
-      await AsyncStorage.setItem('@USER', JSON.stringify(userdata))
-        .then(() => console.log('Usuário salvo'))
-        .catch(error => console.log(error));
-    } catch (e) {
-      console.log(e)
-    }
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(data => {
+        setDoc(doc(database, 'users', data.user.uid), {
+          nome: name,
+          image_user: image,
+        })
+      })
+      .catch(error => console.log(error))
   }
 
   return (
@@ -89,6 +85,33 @@ export function SignIn(){
           <TextInput
             placeholder='Seu nome'
             onChangeText={setName}
+            placeholderTextColor={scheme.colors.text}
+            style={[
+              styles.input, {
+                backgroundColor: scheme.colors.border,
+                color: scheme.colors.text
+              }
+            ]}
+          />
+
+          <TextInput
+            placeholder='Email'
+            onChangeText={setEmail}
+            keyboardType='email-address'
+            placeholderTextColor={scheme.colors.text}
+            style={[
+              styles.input, {
+                backgroundColor: scheme.colors.border,
+                color: scheme.colors.text
+              }
+            ]}
+          />
+
+          <TextInput
+            placeholder='Senha'
+            onChangeText={setPassword}
+            keyboardType='visible-password'
+            secureTextEntry
             placeholderTextColor={scheme.colors.text}
             style={[
               styles.input, {

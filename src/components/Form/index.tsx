@@ -6,12 +6,13 @@ import {
 } from 'react-native';
 import uuid from 'react-native-uuid';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { scheduleNotificationAsync } from 'expo-notifications';
 import { useTheme } from '@react-navigation/native';
+import { doc, setDoc, updateDoc } from 'firebase/firestore';
 
 import { styles } from './styles';
 import { theme } from '../../styles/theme';
+import { database } from '../../../config/firebase';
 
 import { ButtonIcon } from '../ButtonIcon';
 import { Context } from '../../context';
@@ -28,7 +29,7 @@ export function Form({ handleShowForm } : Props){
   const [timeNotification, setTimeNotification] = useState(new Date);
   const [date, setDate] = useState(new Date());
   const [showModalDateTimePicker, setShowModalDateTimePicker] = useState(false);
-  const { tasks, setTasks } = useContext(Context);
+  const { userId } = useContext(Context);
   const scheme = useTheme();
 
   function onChange(event, selectedDate) {
@@ -50,32 +51,28 @@ export function Form({ handleShowForm } : Props){
   }
 
   async function handleAddTask() {
-    const task = {
-      id: uuid.v4().toString(),
+    const id = uuid.v4().toString();
+    setDoc(doc(database, 'users', userId, 'tasks', id), {
+      id: id,
       name: text,
       checked: false,
       time_notification: timeNotification > date ? timeNotification : null,
-      create_at: new Date(),
+      create_at: date,
       important: important,
       id_notification: '',
-    }
-    setTasks([...tasks, task]);
-
-    try {
-      await AsyncStorage.setItem('@TASKS', JSON.stringify([...tasks, task]))
-        .then(() => console.log('Tarefa salva'))
-        .catch(error => console.log(error));
-    } catch (e) {
-      console.log(e);
-    }
-    
-    if (timeNotification > date) {
-      const diffTime = Math.abs(Number(timeNotification) - Number(date));
-      const timeRes = diffTime / 1000;
-      task.id_notification = await schedulePushNotification(task.name, timeRes);
-      setTimeNotification(null);
-      setText(null);
-    }
+    })
+      .then(async () => {
+        if (timeNotification > date) {
+          const diffTime = Math.abs(Number(timeNotification) - Number(date));
+          const timeRes = diffTime / 1000;
+          updateDoc(doc(database, 'users', userId, 'tasks', id), {
+            id_notification: await schedulePushNotification(text, timeRes),
+          })
+          setTimeNotification(null);
+          setText(null);
+        }
+      })
+      .catch(error => console.log(error))
   }
 
   async function schedulePushNotification(nameTask: string, time: number) {

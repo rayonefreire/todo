@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 34,
-    gap: 80,
+    gap: 60,
   },
   image: {
     height: 120,

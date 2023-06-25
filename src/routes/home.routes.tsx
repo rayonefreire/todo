@@ -1,9 +1,8 @@
 import { useContext } from 'react';
 import { TouchableOpacity, Text } from 'react-native';
-
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 
 import { Tasks } from "../screens/Tasks";
 import { Home } from "../screens/Home";
@@ -18,8 +17,8 @@ import { styles } from './styles';
 
 export function HomeRoutes() {
   const { Navigator, Screen } = createNativeStackNavigator();
-  const { tasks, setTasks } = useContext(Context);
-
+  const { tasks, setTasks, getTasksData } = useContext(Context);
+  const scheme = useTheme();
   const navigation = useNavigation();
   
   function handleNavigateTasksChecked() {
@@ -31,14 +30,23 @@ export function HomeRoutes() {
   }
 
   function handleFilter(searchTask: string) {
-    setTasks(tasks.filter(task => task.name === searchTask));
-    console.log(tasks.filter(task => task.name === searchTask));
+    setTasks(
+      tasks.filter(task => 
+        task.name.toUpperCase().includes(searchTask.toUpperCase())
+      )
+    );
+    if (searchTask === '') {
+      getTasksData();
+    }
   }
 
   return (
-    <Navigator
+    <Navigator   
       screenOptions={{
         headerLargeTitle: true,
+        headerStyle: {
+          backgroundColor: scheme.colors.background
+        },
         headerLeft: () => (
           <TouchableOpacity
             activeOpacity={0.7}
@@ -55,7 +63,6 @@ export function HomeRoutes() {
         name="Tasks"
         component={Tasks}
         options={{
-          headerShown: true,
           title: 'Tarefas',
           headerTitleStyle: {
             color: theme.orange,
@@ -63,6 +70,7 @@ export function HomeRoutes() {
           headerSearchBarOptions: {
             placeholder: 'Buscar',
             onChangeText: (event) => handleFilter(event.nativeEvent.text),
+            onCancelButtonPress: () => getTasksData(),
           },
           headerRight: () => (
             <ButtonIcon
@@ -89,7 +97,6 @@ export function HomeRoutes() {
         name="TasksScheduled"
         component={TasksScheduled}
         options={{
-          headerShown: true,
           headerTintColor: theme.orange,
           title: 'Agendados',
         }}
@@ -98,7 +105,6 @@ export function HomeRoutes() {
         name="TasksImportant"
         component={TasksImportant}
         options={{
-          headerShown: true,
           headerTintColor: theme.purple,
           title: 'Importantes',
         }}

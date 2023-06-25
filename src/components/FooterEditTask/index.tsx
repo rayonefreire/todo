@@ -16,11 +16,14 @@ import { ButtonIcon } from '../ButtonIcon'
 import { Context } from '../../context';
 import { ButtonText } from '../ButtonText';
 import { ModalView } from '../ModalView';
+import { doc, updateDoc } from 'firebase/firestore';
+import { database } from '../../../config/firebase';
 
 export function FooterEditTask(){
   const scheme = useTheme();
 
   const {
+    userId,
     tasks,
     taskEdit,
     textEdit,
@@ -31,33 +34,27 @@ export function FooterEditTask(){
   const [importantEdit, setImportantEdit] = useState(taskEdit.important);
   const [timeNotificationEdit, setTimeNotificationEdit] = useState(taskEdit.time_notification);
   const [showModalDateTimePicker, setShowModalDateTimePicker] = useState(false);
+  const [date, setDate] = useState(new Date());
 
   async function handleEditTask() {
     cancelScheduledNotificationAsync(taskEdit.id_notification)
-      //.then(() => console.log('Notificação cancelada ' + taskEdit.id_notification))
-      //.catch(error => console.log(error));
-
-    // Editando as propriedades da tarefa
-    taskEdit.name = textEdit;
-    taskEdit.important = importantEdit;
-    taskEdit.time_notification = timeNotificationEdit;
+      .then(() => console.log('Notificação cancelada ' + taskEdit.id_notification))
+      .catch(error => console.log(error));
 
     // Enviando uma nova notificação
     const diffTime = Math.abs(Number(timeNotificationEdit) - Number(new Date()));
     const timeRes = diffTime / 1000;
-    taskEdit.id_notification = await schedulePushNotification(taskEdit.name, timeRes);
+    const idNotification = await schedulePushNotification(textEdit, timeRes);
 
-    // Salvando lista de tarefas atualizada
-    try {
-      await AsyncStorage.setItem('@TASKS', JSON.stringify(tasks))
-        .then(() => {
-          console.log('Tarefa editada salva');
-          setShowFormEdit(!showFormEdit);
-        })
-        .catch(error => console.log(error));
-    } catch (e) {
-      console.log(e);
-    }
+    // Editando as propriedades da tarefa
+    updateDoc(doc(database, 'users', userId, 'tasks', taskEdit.id), {
+      name: textEdit,
+      important: importantEdit,
+      time_notification: timeNotificationEdit,
+      id_notification: idNotification,
+    })
+
+    setShowFormEdit(false);
   }
 
   function handleImportantEdit() {
@@ -86,7 +83,7 @@ export function FooterEditTask(){
       },
       trigger: { seconds: time },
     })
-    //console.log('Notificação enviada ' + identifier);
+    console.log('Notificação enviada ' + identifier);
     return identifier;
   }
 
@@ -127,7 +124,7 @@ export function FooterEditTask(){
         
         <DateTimePicker
           testID="dateTimePicker"
-          value={new Date()}
+          value={date}
           mode='datetime'
           locale='pt-br'
           display='spinner'

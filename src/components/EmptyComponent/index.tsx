@@ -16,7 +16,6 @@ type Props = {
 }
 
 export function EmptyComponent({ typeList } : Props){
-
   function sizeAnimation() {
     let size = 0;
     if (typeList === 'Tarefas') {

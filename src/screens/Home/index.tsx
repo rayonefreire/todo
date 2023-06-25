@@ -11,9 +11,11 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@react-navigation/native';
+import { signOut } from 'firebase/auth';
 
 import { styles } from './styles';
 import { theme } from '../../styles/theme';
+import { auth } from '../../../config/firebase';
 
 import { ItemHome } from '../../components/ItemHome';
 import { Context } from '../../context';
@@ -47,7 +49,7 @@ const ITENS = [
 
 export function Home(){
   const [showModal, setShowModal] = useState(false);
-  const { user, setUser, setTheme } = useContext(Context);
+  const { user } = useContext(Context);
   const scheme = useTheme();
 
   const SETTINGS = [
@@ -55,11 +57,6 @@ export function Home(){
       id: '1',
       name: 'Sair',
       on_press: () => {handleSignOut()},
-    },
-    {
-      id: '2',
-      name: 'Mudar tema',
-      on_press: () => {handleChangeTheme()},
     },
   ];
 
@@ -69,45 +66,7 @@ export function Home(){
 
   function handleSignOut() {
     AsyncStorage.clear();
-    setUser(null);
-  }
-
-  function handleChangeTheme() {
-    Alert.alert('Mudar tema', 'Escolha a opção de tema', [
-      {
-        text: 'Claro',
-        onPress: async () => {
-          setTheme('light');
-          try {
-            await AsyncStorage.setItem('@THEME', 'light');
-          } catch (error) {
-            console.log(error);
-          }
-        }
-      },
-      {
-        text: 'Escuro',
-        onPress: async () => {
-          setTheme('dark');
-          try {
-            await AsyncStorage.setItem('@THEME', 'dark');
-          } catch (error) {
-            console.log(error);
-          }
-        }
-      },
-      {
-        text: 'Sistema',
-        onPress: async () => {
-          setTheme(null);
-          try {
-            await AsyncStorage.setItem('@THEME', 'null');
-          } catch (error) {
-            console.log(error);
-          }
-        }
-      }
-    ])
+    signOut(auth);
   }
 
   return (
@@ -126,7 +85,7 @@ export function Home(){
               style={styles.image}
             />
             <Text style={[styles.name, { color: scheme.colors.text }]}>
-              { user.name }
+              { user.nome }
             </Text>
           </View>
         </View>

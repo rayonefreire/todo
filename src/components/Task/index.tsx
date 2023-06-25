@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import {
   Text,
@@ -17,7 +17,9 @@ import { Context } from '../../context';
 
 export type TaskProps = {
   name: string;
-  time_notification: Date | null;
+  time_notification: {
+    seconds: number;
+  } | null;
   id: string;
   checked: boolean;
   create_at: Date;
@@ -28,7 +30,7 @@ export type TaskProps = {
 type Props = {
   task: TaskProps;
   icon?: React.ComponentProps<typeof MaterialCommunityIcons>['name'] | null;
-  handleCheckTask?: (taskId: string) => void;
+  handleCheckTask?: (taskId: string, idNotification: string) => void;
   typeList?: string;
 }
 
@@ -45,13 +47,25 @@ export function Task({
     setTaskEdit,
   } = useContext(Context);
   const scheme = useTheme();
-  const formatTime = new Date(task.time_notification).toLocaleString();
+  const formatTime = task.time_notification && new Date(task.time_notification.seconds * 1000).toLocaleString();
   const [text, setText] = useState(task.name);
+  const [isEditing, setIsEditing] = useState(false);
 
   function handleShowFormEdit() {
-    setShowFormEdit(!showFormEdit);
+    setIsEditing(true);
+    setShowFormEdit(true);
+    if (showFormEdit === true) {
+      setShowFormEdit(false);
+      setIsEditing(false);
+    }
     setTaskEdit(task);
   }
+
+  useEffect(() => {
+    if (showFormEdit === false) {
+      setIsEditing(false);
+    }
+  }, [showFormEdit]);
 
   return (
     <View style={{ paddingVertical: 9 }}>
@@ -61,7 +75,7 @@ export function Task({
             icon_name='checkbox-blank-circle-outline'
             color={theme.gray}
             size={32}
-            onPress={() => handleCheckTask(task.id)}
+            onPress={() => handleCheckTask(task.id, task.id_notification)}
           />
         }
 
@@ -69,7 +83,7 @@ export function Task({
           <MaterialCommunityIcons name={icon} size={24} color={theme.blue} />
         }
 
-        {showFormEdit ?
+        {isEditing && showFormEdit && typeList === 'Tarefas' ?
           <TextInput
             placeholder='Tarefa'
             value={text}
@@ -96,12 +110,12 @@ export function Task({
         }
       </View>
       
-      {task.time_notification &&
+      {task.time_notification && task.time_notification.seconds &&
         <Text style={[
           styles.text, {
             marginTop: handleCheckTask ? 5 : 10,
             marginLeft: handleCheckTask ? 42 : 34,
-            color: new Date() > task.time_notification ? 'red' : scheme.colors.text
+            color: new Date() > new Date(task.time_notification.seconds * 1000) ? 'red' : scheme.colors.text,
           }
         ]}>
           { formatTime }

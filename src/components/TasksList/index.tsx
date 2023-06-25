@@ -5,7 +5,8 @@ import {
   View,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { cancelScheduledNotificationAsync } from 'expo-notifications';
+import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
 
 import { Task } from '../Task';
 import { Divider } from '../Divider';
@@ -13,13 +14,15 @@ import { Context, PropsTasks } from '../../context';
 import { Button } from '../Button';
 import { EmptyComponent } from '../EmptyComponent';
 
+import { database } from '../../../config/firebase';
+
 type Props = {
   type: string;
 }
 
 export function TasksList({ type } : Props){
   const [tasksScreen, setTasksScreen] = useState<PropsTasks>([]);
-  const { tasks, setTasks } = useContext(Context);
+  const { tasks, userId } = useContext(Context);
 
   function checkTypeIconTask() {
     let iconName = "" as React.ComponentProps<typeof MaterialCommunityIcons>['name'];
@@ -33,27 +36,21 @@ export function TasksList({ type } : Props){
     return iconName;
   }
 
-  function handleCheckTask(taskId: string) {
-    const tasksUpdated = tasks.map(task => {
-      if (task.id === taskId) {
-        task.checked = true;
-        task.important = false;
-        task.time_notification = null;
-        task.id_notification = null;
-      }
-      return task;
+  function handleCheckTask(taskId: string, idNotification: string) {
+    cancelScheduledNotificationAsync(idNotification);
+    updateDoc(doc(database, 'users', userId, 'tasks', taskId), {
+      checked: true,
+      important: false,
+      time_notification: null,
+      id_notification: null,
     });
-    setTasks(tasksUpdated);
   }
 
-  async function handleClearTasksChecked() {
-    const newTaskList = tasks.filter(task => task.checked === false);
-    setTasks(newTaskList);
-    try {
-      await AsyncStorage.setItem('@TASKS', JSON.stringify(newTaskList));
-    } catch (e) {
-      console.log(e);
-    }
+  function handleClearTasksChecked() {
+    const newTaskList = tasks.filter(task => task.checked === true);
+    newTaskList.map(task => {
+      deleteDoc(doc(database, 'users', userId, 'tasks', task.id));
+    });
   }
 
   useEffect(() => {
@@ -78,7 +75,7 @@ export function TasksList({ type } : Props){
         renderItem={({ item }) =>
           <Task
             task={item}
-            handleCheckTask={ type === 'Tarefas' && handleCheckTask }
+            handleCheckTask={type === 'Tarefas' && handleCheckTask}
             icon={checkTypeIconTask()}
             typeList={type}
           />
