@@ -31,15 +31,15 @@ type Props = {
 }
 
 export type PropsTasks = {
-  id: string;
   name: string;
-  checked: boolean;
   time_notification: {
     seconds: number;
   } | null;
-  id_notification: string | null;
+  id: string;
+  checked: boolean;
   create_at: Date;
   important: boolean;
+  id_notification: string | null;
 }[];
 
 type PropsProvider = {

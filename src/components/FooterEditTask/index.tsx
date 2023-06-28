@@ -5,30 +5,28 @@ import {
 } from 'react-native';
 ;
 import { cancelScheduledNotificationAsync, scheduleNotificationAsync } from 'expo-notifications';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useTheme } from '@react-navigation/native';
+import { doc, updateDoc } from 'firebase/firestore';
 
 import { theme } from '../../styles/theme';
 import { styles } from './styles';
+import { database } from '../../../config/firebase';
 
 import { ButtonIcon } from '../ButtonIcon'
 import { Context } from '../../context';
 import { ButtonText } from '../ButtonText';
 import { ModalView } from '../ModalView';
-import { doc, updateDoc } from 'firebase/firestore';
-import { database } from '../../../config/firebase';
 
 export function FooterEditTask(){
   const scheme = useTheme();
 
   const {
     userId,
-    tasks,
     taskEdit,
     textEdit,
+    setTextEdit,
     setShowFormEdit,
-    showFormEdit,
   } = useContext(Context);
 
   const [importantEdit, setImportantEdit] = useState(taskEdit.important);

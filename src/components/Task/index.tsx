@@ -45,6 +45,7 @@ export function Task({
     setShowFormEdit,
     showFormEdit,
     setTaskEdit,
+    taskEdit,
   } = useContext(Context);
   const scheme = useTheme();
   const formatTime = task.time_notification && new Date(task.time_notification.seconds * 1000).toLocaleString();
@@ -65,6 +66,10 @@ export function Task({
     if (showFormEdit === false) {
       setIsEditing(false);
     }
+  }, [showFormEdit]);
+
+  useEffect(() => {
+    setTextEdit(text);
   }, [showFormEdit]);
 
   return (
@@ -90,10 +95,7 @@ export function Task({
             style={[styles.input, { color: scheme.colors.text }]}
             autoFocus
             onBlur={handleShowFormEdit}
-            onChangeText={text => {
-              setTextEdit(text);
-              setText(text);
-            }}
+            onChangeText={setText}
           /> :
           <TouchableOpacity
             activeOpacity={0.5}
