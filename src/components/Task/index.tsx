@@ -45,7 +45,6 @@ export function Task({
     setShowFormEdit,
     showFormEdit,
     setTaskEdit,
-    taskEdit,
   } = useContext(Context);
   const scheme = useTheme();
   const formatTime = task.time_notification && new Date(task.time_notification.seconds * 1000).toLocaleString();
@@ -70,7 +69,7 @@ export function Task({
 
   useEffect(() => {
     setTextEdit(text);
-  }, [showFormEdit]);
+  }, [text]);
 
   return (
     <View style={{ paddingVertical: 9 }}>

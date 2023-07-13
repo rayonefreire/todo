@@ -7,7 +7,6 @@ import {
   Text,
   SafeAreaView,
   ScrollView,
-  Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@react-navigation/native';

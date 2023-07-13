@@ -83,7 +83,7 @@ export function Form({ handleShowForm } : Props){
       },
       trigger: { seconds: time },
     })
-    //console.log('Notificação enviada ' + identifier);
+    console.log('Notificação enviada ' + identifier);
     return identifier;
   }
   

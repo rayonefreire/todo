@@ -3,11 +3,11 @@ import React, { useContext, useState } from 'react';
 import {
   View
 } from 'react-native';
-;
+
 import { cancelScheduledNotificationAsync, scheduleNotificationAsync } from 'expo-notifications';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useTheme } from '@react-navigation/native';
-import { doc, updateDoc } from 'firebase/firestore';
+import { Timestamp, doc, updateDoc } from 'firebase/firestore';
 
 import { theme } from '../../styles/theme';
 import { styles } from './styles';
@@ -25,7 +25,6 @@ export function FooterEditTask(){
     userId,
     taskEdit,
     textEdit,
-    setTextEdit,
     setShowFormEdit,
   } = useContext(Context);
 
@@ -40,9 +39,8 @@ export function FooterEditTask(){
       .catch(error => console.log(error));
 
     // Enviando uma nova notificação
-    const diffTime = Math.abs(Number(timeNotificationEdit) - Number(new Date()));
-    const timeRes = diffTime / 1000;
-    const idNotification = await schedulePushNotification(textEdit, timeRes);
+    const time = timeNotificationEdit.seconds - Math.floor(Date.now() / 1000);
+    const idNotification = await schedulePushNotification(textEdit, time);
 
     // Editando as propriedades da tarefa
     updateDoc(doc(database, 'users', userId, 'tasks', taskEdit.id), {
@@ -50,8 +48,7 @@ export function FooterEditTask(){
       important: importantEdit,
       time_notification: timeNotificationEdit,
       id_notification: idNotification,
-    })
-
+    });
     setShowFormEdit(false);
   }
 
@@ -60,20 +57,21 @@ export function FooterEditTask(){
   }
 
   function onChange(event, selectedDate) {
-    const currentDate = selectedDate;
+    const currentDate = Timestamp.fromDate(selectedDate);
     setTimeNotificationEdit(currentDate);
-  };
+  }
 
   function handleOpenModalDateTimePicker() {
     setShowModalDateTimePicker(true);
   };
 
   function handleCloseModalDateTimePicker() {
-    setTimeNotificationEdit(null);
+    setTimeNotificationEdit(taskEdit.time_notification);
     setShowModalDateTimePicker(false);
   }
   
   async function schedulePushNotification(nameTask: string, time: number) {
+    console.log(time)
     const identifier = await scheduleNotificationAsync({
       content: {
         title: "Lembrete",
