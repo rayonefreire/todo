@@ -1,8 +1,15 @@
-import { useContext } from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { useContext, useState } from 'react';
+import {
+  View,
+  ScrollView,
+  Text,
+  useColorScheme,
+  Image,
+} from 'react-native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation, useTheme } from "@react-navigation/native";
+import { signOut } from 'firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Tasks } from "../screens/Tasks";
 import { Home } from "../screens/Home";
@@ -11,22 +18,31 @@ import { TasksScheduled } from "../screens/TasksScheduled";
 import { TasksImportant } from "../screens/TasksImportant";
 import { ButtonIcon } from "../components/ButtonIcon";
 import { Context } from "../context";
+import { ModalView } from '../components/ModalView';
+import { ButtonText } from '../components/ButtonText';
 
 import { theme } from "../styles/theme";
+import { auth } from '../../config/firebase';
 import { styles } from './styles';
 
 export function HomeRoutes() {
-  const { Navigator, Screen } = createNativeStackNavigator();
-  const { tasks, setTasks, getTasksData } = useContext(Context);
+  const [showModal, setShowModal] = useState(false);
+  const { tasks, setTasks, getTasksData, user } = useContext(Context);
   const scheme = useTheme();
+  const themeSystem = useColorScheme();
   const navigation = useNavigation();
+  const { Navigator, Screen } = createNativeStackNavigator();
+
+  const SETTINGS = [
+    {
+      id: '1',
+      name: 'Sair',
+      on_press: () => {handleSignOut()},
+    },
+  ];
   
   function handleNavigateTasksChecked() {
     navigation.navigate('TasksChecked');
-  }
-
-  function handleNavigateHomeScreen() {
-    navigation.navigate('Home');
   }
 
   function handleFilter(searchTask: string) {
@@ -40,33 +56,83 @@ export function HomeRoutes() {
     }
   }
 
+  function handleSignOut() {
+    AsyncStorage.clear();
+    signOut(auth);
+  }
+
+  function handleShowModalSettings() {
+    setShowModal(!showModal);
+  }
+
   return (
-    <Navigator   
+    <Navigator
       screenOptions={{
+        headerTransparent: true,
         headerLargeTitle: true,
-        headerStyle: {
-          backgroundColor: scheme.colors.background
+        headerLargeStyle: {
+          backgroundColor: scheme.colors.background,
         },
-        headerLeft: () => (
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles.header}
-            onPress={handleNavigateHomeScreen}
-          >
-            <MaterialCommunityIcons name="chevron-left" size={30} color={theme.blue}/>
-            <Text style={styles.text}>Home</Text>
-          </TouchableOpacity>
-        ),
+        headerStyle: {
+          backgroundColor: themeSystem === 'dark' ? '#1a1a1a' : '#D9D9D9',
+        },
       }}
     >
+      <Screen
+        name="Home"
+        component={Home}
+        options={{
+          presentation: 'card',
+          title: 'Início',
+          headerLeft: () => (
+            <View>
+              <ButtonIcon
+                icon_name='menu'
+                color={scheme.colors.text}
+                onPress={handleShowModalSettings}
+              />
+              <ModalView
+                visible={showModal}
+                handleCloseModal={handleShowModalSettings}
+                height={200}
+              >
+                <ScrollView
+                  style={styles.modal}
+                >
+                  <Text style={[styles.titleModal, { color: scheme.colors.text }]}>
+                    Configurações
+                  </Text>
+                  {SETTINGS.map(item =>
+                    <View key={item.id} style={styles.itemSetting}>
+                      <ButtonText
+                        title={item.name}
+                        onPress={item.on_press}
+                      />
+                    </View>
+                  )}
+                </ScrollView>
+              </ModalView>
+            </View>
+          ),
+          headerRight: () => (
+            <View style={styles.user}>
+              <Text style={[styles.name, { color: scheme.colors.text }]}>
+                { user?.nome }
+              </Text>
+              <Image
+                source={{ uri: user?.image_user }}
+                style={styles.imageUser}
+              />
+            </View>
+          ),
+        }}
+      />
       <Screen
         name="Tasks"
         component={Tasks}
         options={{
           title: 'Tarefas',
-          headerTitleStyle: {
-            color: theme.orange,
-          },
+          headerTintColor: theme.orange,
           headerSearchBarOptions: {
             placeholder: 'Buscar',
             onChangeText: (event) => handleFilter(event.nativeEvent.text),
@@ -78,37 +144,35 @@ export function HomeRoutes() {
               size={23}
               color={theme.blue}
               onPress={handleNavigateTasksChecked}
-              style={{ marginRight: 20 }}
             />
           ),
         }}
       />
       <Screen
-        name="Home"
-        component={Home}
-        options={{ headerShown: false }}
-      />
-      <Screen
         name="TasksChecked"
         component={TasksChecked}
-        options={{ presentation: 'modal', headerShown: false }}
+        options={{
+          presentation: 'modal',
+          title: 'Concluídos',
+          headerTintColor: theme.blue,
+        }}
       />
       <Screen
         name="TasksScheduled"
         component={TasksScheduled}
         options={{
-          headerTintColor: theme.orange,
           title: 'Agendados',
+          headerTintColor: theme.orange,
         }}
       />
       <Screen
         name="TasksImportant"
         component={TasksImportant}
         options={{
-          headerTintColor: theme.purple,
           title: 'Importantes',
+          headerTintColor: theme.purple,
         }}
       />
     </Navigator>
-  )
+  );
 }

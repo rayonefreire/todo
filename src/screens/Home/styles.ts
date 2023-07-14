@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 24,
-    marginTop: 15,
+    paddingTop: 130,
   },
   header: {
     flexDirection: 'row',
@@ -26,10 +26,4 @@ export const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
   },
-  modal: {
-    paddingVertical: 24,
-  },
-  item: {
-    marginBottom: 25,
-  }
 });

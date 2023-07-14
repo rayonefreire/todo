@@ -1,8 +1,6 @@
 import React, { useContext, useState } from 'react';
 
-import {
-  View
-} from 'react-native';
+import { View } from 'react-native';
 
 import { cancelScheduledNotificationAsync, scheduleNotificationAsync } from 'expo-notifications';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -39,8 +37,8 @@ export function FooterEditTask(){
       .catch(error => console.log(error));
 
     // Enviando uma nova notificação
-    const time = timeNotificationEdit.seconds - Math.floor(Date.now() / 1000);
-    const idNotification = await schedulePushNotification(textEdit, time);
+    const time = timeNotificationEdit && timeNotificationEdit.seconds - Math.floor(Date.now() / 1000);
+    const idNotification = timeNotificationEdit && await schedulePushNotification(textEdit, time);
 
     // Editando as propriedades da tarefa
     updateDoc(doc(database, 'users', userId, 'tasks', taskEdit.id), {

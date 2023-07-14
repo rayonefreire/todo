@@ -71,7 +71,6 @@ export function TasksList({ type } : Props){
         data={tasksScreen}
         keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
-        style={{ paddingTop: 20 }}
         renderItem={({ item }) =>
           <Task
             task={item}

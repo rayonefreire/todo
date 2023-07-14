@@ -4,7 +4,8 @@ import {
   Text,
   TouchableOpacity,
   View,
-  TextInput
+  TextInput,
+  Animated
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
@@ -52,12 +53,9 @@ export function Task({
   const [isEditing, setIsEditing] = useState(false);
 
   function handleShowFormEdit() {
-    setIsEditing(true);
-    setShowFormEdit(true);
-    if (showFormEdit === true) {
-      setShowFormEdit(false);
-      setIsEditing(false);
-    }
+    setTextEdit(task.name);
+    setIsEditing(!isEditing);
+    setShowFormEdit(!showFormEdit);
     setTaskEdit(task);
   }
 
@@ -72,8 +70,8 @@ export function Task({
   }, [text]);
 
   return (
-    <View style={{ paddingVertical: 9 }}>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <View style={styles.content}>
         {handleCheckTask &&
           <ButtonIcon
             icon_name='checkbox-blank-circle-outline'
@@ -107,7 +105,7 @@ export function Task({
         }
 
         {task.important && typeList === 'Tarefas' &&
-          <MaterialCommunityIcons name='flag' size={24} color={theme.orange} />
+          <MaterialCommunityIcons name='flag' size={24} color={theme.orange} style={{ marginLeft: 'auto' }} />
         }
       </View>
       

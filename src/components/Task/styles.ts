@@ -3,15 +3,15 @@ import { theme } from '../../styles/theme';
 
 export const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    marginVertical: 9,
+  },
+  content: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   input: {
     height: 33,
-    width: '100%',
-    borderBottomWidth: 1,
-    borderBottomColor: theme.orange,
+    width: '80%',
     marginLeft: 10,
     fontSize: 18,
   },
@@ -21,5 +21,10 @@ export const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
+  },
+  actionSwapeable: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });

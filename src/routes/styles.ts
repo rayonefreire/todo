@@ -1,15 +1,29 @@
 import { StyleSheet } from 'react-native';
-import { theme } from '../styles/theme';
 
 export const styles = StyleSheet.create({
-  header: {
+  user: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: -8,
-    marginBottom: 4,
   },
-  text: {
-    fontSize: 18,
-    color: theme.blue,
+  imageUser: {
+    height: 40,
+    width: 40,
+    borderRadius: 20,
   },
+  name: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginRight: 10,
+  },
+  modal: {
+    paddingVertical: 24,
+  },
+  titleModal: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  itemSetting: {
+    marginBottom: 25,
+  }
 });

@@ -78,7 +78,7 @@ export function Provider({ children } : PropsProvider) {
   }
 
   async function getTasksData() {
-    if (userId)  {
+    if (userId) {
       const collectionRef = collection(database, 'users', userId, 'tasks');
       const unsubscribe = onSnapshot(query(collectionRef, orderBy('create_at', 'asc')), querySnapshot => {
         const data = querySnapshot.docs.map(doc => doc.data()) as PropsTasks;

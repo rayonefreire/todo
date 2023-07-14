@@ -1,97 +1,49 @@
-import React, { useContext, useState } from 'react';
+import React from 'react';
 
 import {
   FlatList,
   View,
-  Image,
-  Text,
   SafeAreaView,
-  ScrollView,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useTheme } from '@react-navigation/native';
-import { signOut } from 'firebase/auth';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { styles } from './styles';
 import { theme } from '../../styles/theme';
-import { auth } from '../../../config/firebase';
 
 import { ItemHome } from '../../components/ItemHome';
-import { Context } from '../../context';
-import { ButtonIcon } from '../../components/ButtonIcon';
-import { ModalView } from '../../components/ModalView';
-import { ButtonText } from '../../components/ButtonText';
 
 const ITENS = [
   {
     id: '1',
     name: 'Tarefas',
-    icon_name: 'check',
+    icon_name: 'check' as React.ComponentProps<typeof MaterialCommunityIcons>['name'],
     color: theme.blue,
     route: 'Tasks',
   },
   {
     id: '2',
     name: 'Agendados',
-    icon_name: 'clock-time-eight-outline',
+    icon_name: 'clock-time-eight-outline' as React.ComponentProps<typeof MaterialCommunityIcons>['name'],
     color: theme.orange,
     route: 'TasksScheduled',
   },
   {
     id: '3',
     name: 'Importantes',
-    icon_name: 'flag-outline',
+    icon_name: 'flag-outline' as React.ComponentProps<typeof MaterialCommunityIcons>['name'],
     color: theme.purple,
     route: 'TasksImportant',
   },
 ];
 
 export function Home(){
-  const [showModal, setShowModal] = useState(false);
-  const { user } = useContext(Context);
-  const scheme = useTheme();
-
-  const SETTINGS = [
-    {
-      id: '1',
-      name: 'Sair',
-      on_press: () => {handleSignOut()},
-    },
-  ];
-
-  function handleShowModalSettings() {
-    setShowModal(!showModal);
-  }
-
-  function handleSignOut() {
-    AsyncStorage.clear();
-    signOut(auth);
-  }
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <ButtonIcon
-            icon_name='menu'
-            color={scheme.colors.text}
-            onPress={handleShowModalSettings}
-          />
-
-          <View style={styles.user}>
-            <Image
-              source={{ uri: user.image_user }}
-              style={styles.image}
-            />
-            <Text style={[styles.name, { color: scheme.colors.text }]}>
-              { user.nome }
-            </Text>
-          </View>
-        </View>
-
         <FlatList
           data={ITENS}
           keyExtractor={item => item.id}
+          scrollEnabled={false}
           numColumns={2}
           renderItem={({ item }) => 
             <ItemHome
@@ -103,25 +55,6 @@ export function Home(){
           }
         />
       </View>
-
-      <ModalView
-        visible={showModal}
-        handleCloseModal={handleShowModalSettings}
-        height={200}
-      >
-        <ScrollView
-          style={styles.modal}
-        >
-          {SETTINGS.map(item =>
-            <View key={item.id} style={styles.item}>
-              <ButtonText
-                title={item.name}
-                onPress={item.on_press}
-              />
-            </View>
-          )}
-        </ScrollView>
-      </ModalView>
     </SafeAreaView>
   );
 }
