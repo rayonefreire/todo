@@ -1,5 +1,7 @@
 # todo
-O projeto todo-app é um aplicativo de lista de tarefas que permite que você se lembre de realizar determinadas tarefas, marque tarefas como importantes e se organize melhor. Ele é uma ferramenta útil para quem deseja manter o controle de suas tarefas diárias e se manter organizado.
+O Todo App é um aplicativo mobile desenvolvido como parte do meu portfólio pessoal. O objetivo principal é demonstrar minhas habilidades em desenvolvimento mobile utilizando as tecnologias Expo, React Native e TypeScript.
+
+O aplicativo permite que os usuários criem listas de tarefas e gerenciem suas atividades diárias de forma eficiente. Os usuários podem marcar tarefas como concluídas, definir lembretes para tarefas específicas e acompanhar seu progresso em tempo real.
 
 <div>
   <img src="./assets/readme/IMG-4755.PNG" width="160px" />
